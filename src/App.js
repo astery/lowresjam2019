@@ -1,25 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useCallback } from 'react';
 import './App.css';
+
+import { Stage, Layer, Rect, Text } from 'react-konva';
+import Konva from 'konva';
+
+function ColoredRect() {
+  const [color, setColor] = useState(Konva.Util.getRandomColor())
+  const setRandomColor = useCallback(() => {
+    setColor(Konva.Util.getRandomColor())
+  }, [])
+
+  return (
+    <Rect
+      x={20}
+      y={20}
+      width={50}
+      height={50}
+      fill={color}
+      shadowBlur={5}
+      onClick={setRandomColor}
+    />
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Stage width={window.innerWidth} height={window.innerHeight}>
+      <Layer>
+        <Text text="Try click on rect" />
+        <ColoredRect />
+      </Layer>
+    </Stage>
   );
 }
 
