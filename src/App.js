@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Stage, Layer, Rect } from 'react-konva';
+import { Stage, Layer, Rect, Sprite } from 'react-konva';
 import Konva from 'konva';
+import useImage from 'use-image'
+import sprites from './sprites.png'
 
 const frameDelay = 1000 / 60;
 const scale = 10;
@@ -44,13 +46,23 @@ function Hero({position, color}) {
   const x = position.x - w/2
   const y = position.y - w/2
 
+  const [image, st] = useImage(sprites);
+
   return (
-    <Rect
+    <Sprite
       x={x}
       y={y}
-      width={w}
-      height={w}
-      fill={color}
+      image={image}
+      animation='standing'
+      animations={{
+        standing: [
+          3, 32, 10, 20,
+          13, 32, 10, 20,
+          23, 32, 10, 20,
+        ],
+      }}
+      frameRate={7}
+      frameIndex={0}
     />
   );
 }
