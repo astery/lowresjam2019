@@ -4,13 +4,12 @@ import Konva from 'konva';
 import useImage from 'use-image'
 import sprites from './sprites.png'
 
-const frameDelay = 1000 / 60;
 const scale = 10;
 const width = 64;
 const realWidth = scale * width;
 const bgColor = '#5D1D45';
 
-function useInterval(callback, delay) {
+function useInterval(callback) {
   const savedCallback = useRef();
 
   // Remember the latest callback.
@@ -21,13 +20,12 @@ function useInterval(callback, delay) {
   // Set up the interval.
   useEffect(() => {
     function tick() {
+      tick.rafId = requestAnimationFrame(tick);
       savedCallback.current();
     }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
+    tick();
+    return () => cancelAnimationFrame(tick.rafId)
+  }, []);
 }
 
 class Vector {
@@ -134,7 +132,7 @@ function App() {
 
   const updateTick = useCallback(() => setTick(tick + 1), [tick])
 
-  useInterval(updateTick, frameDelay)
+  useInterval(updateTick)
 
   useEffect(() => {
     setHeroPosition(heroPosition.add(heroMove))
